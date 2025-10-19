@@ -56,6 +56,7 @@
     <Compile Include="Customers.cs">
       <DependentUpon>ModeloNorthwind.tt</DependentUpon>
     </Compile>
+    <Compile Include="Datacliente.cs" />
     <Compile Include="ModeloNorthwind.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
