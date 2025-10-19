@@ -66,40 +66,38 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ModeloNorthwind.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModeloNorthwind.edmxModeloNorthwind.Designer.cs">
+    <Compile Include="ModeloNorthwind.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModeloNorthwind.edmxModeloNorthwind.edmx</DependentUpon>
+      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="ModeloNorthwind.edmxModeloNorthwind.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ModeloNorthwind.edmxModeloNorthwind.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.Config" />
-    <None Include="ModeloNorthwind.edmxModeloNorthwind.edmx.diagram">
-      <DependentUpon>ModeloNorthwind.edmxModeloNorthwind.edmx</DependentUpon>
+    <EntityDeploy Include="ModeloNorthwind.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ModeloNorthwind.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ModeloNorthwind.edmx.diagram">
+      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="ModeloNorthwind.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModeloNorthwind.edmxModeloNorthwind.edmx</DependentUpon>
+      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
       <LastGenOutput>ModeloNorthwind.Context.cs</LastGenOutput>
     </Content>
     <Content Include="ModeloNorthwind.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModeloNorthwind.edmxModeloNorthwind.edmx</DependentUpon>
+      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
       <LastGenOutput>ModeloNorthwind.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
