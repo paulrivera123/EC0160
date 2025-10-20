@@ -1,24 +1,24 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Negociocliente;
 using Datacliente;
-using Moq; 
+using Moq;
 using System;
+using Negocio = Negociocliente;
 
 [TestClass]
 public class NegocioClienteTests
 {
-    private Negociocliente _negocioCliente;
-    private Mock<DataCliente> _mockDataCliente; // Objeto que simulará la Capa de Datos
+    // Usamos el alias en la declaración de la variable
+    private Negocio.Negociocliente _negocioCliente;
+    private Mock<DataCliente> _mockDataCliente;
     private Customer _clienteDePrueba;
 
-    // Se ejecuta antes de cada método de prueba
     [TestInitialize]
     public void Setup()
     {
         // 1. Preparamos el simulador (Mock) de la Capa de Datos
         _mockDataCliente = new Mock<DataCliente>();
-        
-        // 2. Creamos el objeto Cliente que usaremos en las simulaciones
+
+        // 2. Creamos el objeto Cliente (entidad POCO) que usaremos en las simulaciones
         _clienteDePrueba = new Customer
         {
             CustomerID = "TESTX",
@@ -27,7 +27,8 @@ public class NegocioClienteTests
         };
 
         // 3. Creamos una instancia de la clase de Negocio, inyectándole el simulador
-        _negocioCliente = new Negociocliente.Negociocliente(_mockDataCliente.Object);
+        // NOTA: Usamos Negocio.Negociocliente para resolver la ambigüedad.
+        _negocioCliente = new Negocio.Negociocliente(_mockDataCliente.Object);
     }
 
     // --- PRUEBA 1: Verificar la Inserción Exitosa ---
@@ -36,7 +37,6 @@ public class NegocioClienteTests
     public void Insertar_DebeRetornarTrue_CuandoLaCapaDeDatosEsExitosa()
     {
         // ARRANGE: Configuramos el simulador para que siempre devuelva TRUE al insertar.
-        // Esto prueba solo la lógica de negocio, asumiendo que la BD funciona.
         _mockDataCliente.Setup(dc => dc.insertarCustomer(It.IsAny<Customer>()))
                         .Returns(true);
 
@@ -48,7 +48,7 @@ public class NegocioClienteTests
         bool resultado = _negocioCliente.insertar();
 
         // ASSERT: Verificamos que la Capa de Negocio retorne True
-        Assert.IsTrue(resultado, "La Capa de Negocio falló al insertar, aunque el simulador retornó True.");
+        Assert.IsTrue(resultado, "La inserción falló, aunque el simulador retornó True.");
     }
 
     // --- PRUEBA 2: Verificar la Carga Exitosa (Consultar) ---
@@ -56,7 +56,7 @@ public class NegocioClienteTests
     [TestMethod]
     public void Cargar_DebeRetornarTrue_YPopularPropiedades_CuandoElClienteExiste()
     {
-        // ARRANGE: Configuramos el simulador para que devuelva nuestro objeto Cliente cuando se consulte "TESTX"
+        // ARRANGE: Configuramos el simulador para que devuelva nuestro objeto Cliente
         _mockDataCliente.Setup(dc => dc.cargarCustomer("TESTX"))
                         .Returns(_clienteDePrueba);
 
