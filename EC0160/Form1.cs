@@ -127,5 +127,23 @@ namespace EC0160.Presentation
                 MessageBox.Show("Error: ID inexistente o el cliente tiene órdenes asociadas.", "Error de Eliminación", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // Form1
+            // 
+            this.ClientSize = new System.Drawing.Size(1087, 253);
+            this.Name = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
