@@ -6,7 +6,10 @@ namespace Negociocliente
     // Esta clase debe ser pública para que la Capa de Presentación la vea
     public class Negociocliente
     {
-        // --- PROPIEDADES PÚBLICAS --- (CRUCIAL para el error CS1061)
+        // Declara el campo sin inicializar para que pueda ser inyectado (mocked)
+        private DataCliente dataCliente;
+
+        // --- PROPIEDADES PÚBLICAS --- (Usadas por la Capa de Presentación)
         public string CustomerID { get; set; }
         public string CompanyName { get; set; }
         public string ContactName { get; set; }
@@ -19,8 +22,17 @@ namespace Negociocliente
         public string Phone { get; set; }
         public string Fax { get; set; }
 
-        // Instancia de la clase de datos (DataCliente)
-        private DataCliente dataCliente = new DataCliente();
+        // --- CONSTRUCTOR 1: Para la Capa de Presentación (Usa el objeto real) ---
+        public Negociocliente()
+        {
+            dataCliente = new DataCliente();
+        }
+
+        // --- CONSTRUCTOR 2: Para las Pruebas Unitarias (Usa el objeto inyectado/simulado) ---
+        public Negociocliente(DataCliente dc)
+        {
+            dataCliente = dc;
+        }
 
         // --- MÉTODOS DE NEGOCIO (CRUD) ---
 
@@ -73,7 +85,7 @@ namespace Negociocliente
         public bool cargar()
         {
             // La capa de datos devuelve la entidad, y llenamos las propiedades de esta clase
-            var customerEncontrado = dataCliente.cargarCustomer(this.CustomerID);
+            Customer customerEncontrado = dataCliente.cargarCustomer(this.CustomerID);
 
             if (customerEncontrado != null)
             {
