@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Windows.Forms;
-using Negociocliente; // Importamos el namespace de nuestra Capa de Negocio
+using Negociocliente; // Usamos el namespace de la capa de Negocio
 
 namespace EC0160.Presentation
 {
-    // El modificador 'partial' es crucial para combinar este código con el diseño.
+    // El modificador 'partial' es crucial para que el código se fusione con el diseño visual.
     public partial class Form1 : Form
     {
-        // Solución al error CS0118: Usamos el nombre de clase completo para evitar ambigüedad.
+        // Instancia de la clase de negocio. Usamos el nombre de clase completo para evitar ambigüedad.
         private Negociocliente.Negociocliente negocio = new Negociocliente.Negociocliente();
 
         public Form1()
         {
-            // Esta llamada es CRUCIAL para inicializar y "encontrar" los controles.
+            // Esta llamada es CRUCIAL. Inicializa y enlaza todos los controles (TextBox, Buttons).
             InitializeComponent();
         }
 
         // --- MÉTODOS AUXILIARES ---
+
+        // Mapea los datos del formulario a las propiedades del objeto de Negocio
         private void MapControlsToNegocio()
         {
-            // Mapeo del formulario -> Negocio
             negocio.CustomerID = txtCustomerID.Text;
             negocio.CompanyName = txtCompanyName.Text;
             negocio.ContactName = txtContactName.Text;
@@ -33,9 +34,9 @@ namespace EC0160.Presentation
             negocio.Fax = txtFax.Text;
         }
 
+        // Mapea los datos del objeto de Negocio (después de una consulta) al formulario
         private void MapNegocioToControls()
         {
-            // Mapeo del Negocio -> formulario (para la consulta)
             txtCustomerID.Text = negocio.CustomerID;
             txtCompanyName.Text = negocio.CompanyName;
             txtContactName.Text = negocio.ContactName;
@@ -49,9 +50,9 @@ namespace EC0160.Presentation
             txtFax.Text = negocio.Fax;
         }
 
+        // Limpia todos los campos del formulario
         private void ClearControls()
         {
-            // Limpia todas las TextBoxes
             txtCustomerID.Clear();
             txtCompanyName.Clear();
             txtContactName.Clear();
@@ -70,13 +71,11 @@ namespace EC0160.Presentation
         private void btnInsertar_Click(object sender, EventArgs e)
         {
             MapControlsToNegocio();
-
             if (string.IsNullOrEmpty(negocio.CustomerID))
             {
                 MessageBox.Show("El ID del cliente no puede estar vacío.", "Error de Inserción", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             if (negocio.insertar())
             {
                 MessageBox.Show("Cliente agregado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -91,7 +90,6 @@ namespace EC0160.Presentation
         private void btnConsultar_Click(object sender, EventArgs e)
         {
             negocio.CustomerID = txtCustomerID.Text;
-
             if (negocio.cargar())
             {
                 MapNegocioToControls();
@@ -106,7 +104,6 @@ namespace EC0160.Presentation
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             MapControlsToNegocio();
-
             if (negocio.actualizar())
             {
                 MessageBox.Show("Cambio exitoso.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -120,7 +117,6 @@ namespace EC0160.Presentation
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             negocio.CustomerID = txtCustomerID.Text;
-
             if (negocio.eliminar())
             {
                 MessageBox.Show("Cliente borrado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
