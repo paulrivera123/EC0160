@@ -3,13 +3,12 @@ using System;
 
 namespace Negociocliente
 {
-    // Esta clase debe ser pública para que la Capa de Presentación la vea
+    // Clase pública para que la Capa de Presentación pueda verla
     public class Negociocliente
     {
-        // Declara el campo sin inicializar para que pueda ser inyectado (mocked)
-        private DataCliente dataCliente;
+        private DataCliente dataCliente; // Variable para almacenar la instancia
 
-        // --- PROPIEDADES PÚBLICAS --- (Usadas por la Capa de Presentación)
+        // --- PROPIEDADES PÚBLICAS ---
         public string CustomerID { get; set; }
         public string CompanyName { get; set; }
         public string ContactName { get; set; }
@@ -22,13 +21,15 @@ namespace Negociocliente
         public string Phone { get; set; }
         public string Fax { get; set; }
 
-        // --- CONSTRUCTOR 1: Para la Capa de Presentación (Usa el objeto real) ---
+        // --- CONSTRUCTOR 1: Para la Interfaz de Usuario (usa el objeto real) ---
+        // Este constructor es necesario para que Form1 pueda inicializar la clase.
         public Negociocliente()
         {
             dataCliente = new DataCliente();
         }
 
-        // --- CONSTRUCTOR 2: Para las Pruebas Unitarias (Usa el objeto inyectado/simulado) ---
+        // --- CONSTRUCTOR 2: Para las Pruebas Unitarias (Inyección de Dependencia) ---
+        // Este constructor es necesario para que las pruebas puedan inyectar un simulador (Mock).
         public Negociocliente(DataCliente dc)
         {
             dataCliente = dc;
@@ -38,7 +39,6 @@ namespace Negociocliente
 
         public bool insertar()
         {
-            // Mapeamos las propiedades de esta clase a la entidad Customer (POCO)
             var customer = new Customer
             {
                 CustomerID = this.CustomerID,
@@ -54,7 +54,6 @@ namespace Negociocliente
                 Fax = this.Fax
             };
 
-            // Llamada a la Capa de Datos
             return dataCliente.insertarCustomer(customer);
         }
 
@@ -84,7 +83,6 @@ namespace Negociocliente
 
         public bool cargar()
         {
-            // La capa de datos devuelve la entidad, y llenamos las propiedades de esta clase
             Customer customerEncontrado = dataCliente.cargarCustomer(this.CustomerID);
 
             if (customerEncontrado != null)
