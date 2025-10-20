@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using NorthwindModel;
 
 namespace Datacliente
 {
@@ -10,7 +9,7 @@ namespace Datacliente
         {
             try
             {
-                using (var contexto = new NorthwindEntities1())
+                using (var contexto = new NorthwindContext())
                 {
                     contexto.Customers.Add(customer);
                     contexto.SaveChanges();
@@ -24,7 +23,7 @@ namespace Datacliente
         {
             try
             {
-                using (var contexto = new NorthwindEntities1())
+                using (var contexto = new NorthwindContext())
                 {
                     var clienteExistente = contexto.Customers.Find(customer.CustomerID);
                     if (clienteExistente == null) return false;
@@ -41,7 +40,7 @@ namespace Datacliente
         {
             try
             {
-                using (var contexto = new NorthwindEntities1())
+                using (var contexto = new NorthwindContext())
                 {
                     var clienteAEliminar = contexto.Customers.Find(customerID);
                     if (clienteAEliminar == null) return false;
@@ -58,7 +57,7 @@ namespace Datacliente
         {
             try
             {
-                using (var contexto = new NorthwindEntities1())
+                using (var contexto = new NorthwindContext())
                 {
                     var clienteEncontrado = contexto.Customers.Find(customerID);
                     return clienteEncontrado;

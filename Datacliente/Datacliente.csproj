@@ -53,52 +53,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Customers.cs">
-      <DependentUpon>ModeloNorthwind.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Customer.cs" />
     <Compile Include="Datacliente.cs" />
-    <Compile Include="ModeloNorthwind.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModeloNorthwind.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ModeloNorthwind.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModeloNorthwind.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ModeloNorthwind.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
-    </Compile>
+    <Compile Include="NorthwindContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <EntityDeploy Include="ModeloNorthwind.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ModeloNorthwind.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="ModeloNorthwind.edmx.diagram">
-      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ModeloNorthwind.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
-      <LastGenOutput>ModeloNorthwind.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="ModeloNorthwind.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModeloNorthwind.edmx</DependentUpon>
-      <LastGenOutput>ModeloNorthwind.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
