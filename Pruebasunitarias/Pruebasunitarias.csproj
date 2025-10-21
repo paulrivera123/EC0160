@@ -73,11 +73,7 @@
       <Project>{b0a9ecc0-26af-4b32-97fa-d5d64238a9f1}</Project>
       <Name>Datacliente</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EC0160\EC0160.Presentation.csproj">
-      <Project>{6d064a09-b524-47fb-83eb-4e91eef7b7e2}</Project>
-      <Name>EC0160.Presentation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Negociocliente\Negociocliente.csproj">
+      <ProjectReference Include="..\Negociocliente\Negociocliente.csproj">
       <Project>{79da4546-ef9a-4b58-8da1-c7bc5ace8d71}</Project>
       <Name>Negociocliente</Name>
     </ProjectReference>
