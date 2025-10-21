@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace EC0160.Data
+namespace Datacliente
 { 
       public class Cliente
 {

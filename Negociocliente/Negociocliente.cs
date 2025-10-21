@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using EC0160.Data;  // ← AGREGAR este using
+using Datacliente;
 
-namespace EC0160.Business
+namespace Negociocliente
 {
     public class NegocioCliente
     {

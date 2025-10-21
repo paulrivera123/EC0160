@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using EC0160.Business;
-using EC0160.Data;
+using Negociocliente;  
+using Datacliente;
+
 
 namespace EC0160.Presentation
 {
