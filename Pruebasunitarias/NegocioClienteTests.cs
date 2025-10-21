@@ -1,72 +1,75 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Datacliente;
 using Moq;
+using EC0160.Business;  // Para NegocioCliente
+using EC0160.Data;      // Para IDataCliente y Cliente
 using System;
-using Negocio = Negociocliente;
+using System.Data;
+using System.Collections.Generic;
 
-[TestClass]
-public class NegocioClienteTests
+namespace Pruebasunitarias
 {
-    // Usamos el alias en la declaración de la variable
-    private Negocio.Negociocliente _negocioCliente;
-    private Mock<DataCliente> _mockDataCliente;
-    private Customer _clienteDePrueba;
-
-    [TestInitialize]
-    public void Setup()
+    [TestClass]
+    public class NegocioClienteTests
     {
-        // 1. Preparamos el simulador (Mock) de la Capa de Datos
-        _mockDataCliente = new Mock<DataCliente>();
+        private Mock<IDataCliente> _mockDataCliente;
+        private NegocioCliente _negocioCliente;
 
-        // 2. Creamos el objeto Cliente (entidad POCO) que usaremos en las simulaciones
-        _clienteDePrueba = new Customer
+        [TestInitialize]
+        public void Setup()
         {
-            CustomerID = "TESTX",
-            CompanyName = "Compañia Simulada",
-            ContactName = "Tester"
-        };
+            _mockDataCliente = new Mock<IDataCliente>();
+            _negocioCliente = new NegocioCliente(_mockDataCliente.Object);
+        }
 
-        // 3. Creamos una instancia de la clase de Negocio, inyectándole el simulador
-        // NOTA: Usamos Negocio.Negociocliente para resolver la ambigüedad.
-        _negocioCliente = new Negocio.Negociocliente(_mockDataCliente.Object);
-    }
+        [TestMethod]
+        public void ObtenerClientes_WhenDataExists_ReturnsClientList()
+        {
+            // Arrange
+            var expectedDataTable = new DataTable();
+            expectedDataTable.Columns.Add("Id", typeof(int));
+            expectedDataTable.Columns.Add("Nombre", typeof(string));
+            expectedDataTable.Columns.Add("Apellido", typeof(string));
+            expectedDataTable.Columns.Add("Email", typeof(string));
+            expectedDataTable.Columns.Add("Telefono", typeof(string));
+            expectedDataTable.Columns.Add("Direccion", typeof(string));
 
-    // --- PRUEBA 1: Verificar la Inserción Exitosa ---
+            expectedDataTable.Rows.Add(1, "Juan", "Perez", "juan@email.com", "123456789", "Dirección 1");
 
-    [TestMethod]
-    public void Insertar_DebeRetornarTrue_CuandoLaCapaDeDatosEsExitosa()
-    {
-        // ARRANGE: Configuramos el simulador para que siempre devuelva TRUE al insertar.
-        _mockDataCliente.Setup(dc => dc.insertarCustomer(It.IsAny<Customer>()))
-                        .Returns(true);
+            _mockDataCliente
+                .Setup(x => x.ObtenerClientes())
+                .Returns(expectedDataTable);
 
-        // Mapeamos los datos de prueba a la Capa de Negocio
-        _negocioCliente.CustomerID = _clienteDePrueba.CustomerID;
-        _negocioCliente.CompanyName = _clienteDePrueba.CompanyName;
+            // Act
+            var result = _negocioCliente.ObtenerClientes();
 
-        // ACT: Llamamos al método de negocio
-        bool resultado = _negocioCliente.insertar();
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("Juan", result[0].Nombre);
+        }
 
-        // ASSERT: Verificamos que la Capa de Negocio retorne True
-        Assert.IsTrue(resultado, "La inserción falló, aunque el simulador retornó True.");
-    }
+        [TestMethod]
+        public void CrearCliente_ValidCliente_ReturnsSuccess()
+        {
+            // Arrange
+            var cliente = new Cliente
+            {
+                Nombre = "Test",
+                Apellido = "User",
+                Email = "test@email.com",
+                Telefono = "123456789",
+                Direccion = "Test Address"
+            };
 
-    // --- PRUEBA 2: Verificar la Carga Exitosa (Consultar) ---
+            _mockDataCliente
+                .Setup(x => x.CrearCliente(It.IsAny<Cliente>()))
+                .Returns(1);
 
-    [TestMethod]
-    public void Cargar_DebeRetornarTrue_YPopularPropiedades_CuandoElClienteExiste()
-    {
-        // ARRANGE: Configuramos el simulador para que devuelva nuestro objeto Cliente
-        _mockDataCliente.Setup(dc => dc.cargarCustomer("TESTX"))
-                        .Returns(_clienteDePrueba);
+            // Act
+            var result = _negocioCliente.CrearCliente(cliente);
 
-        _negocioCliente.CustomerID = "TESTX";
-
-        // ACT: Llamamos al método de negocio
-        bool resultado = _negocioCliente.cargar();
-
-        // ASSERT: Verificamos que la carga fue exitosa y que los datos se copiaron al Negocio
-        Assert.IsTrue(resultado, "La carga del cliente falló.");
-        Assert.AreEqual("Compañia Simulada", _negocioCliente.CompanyName, "Las propiedades de la Capa de Negocio no se llenaron correctamente.");
+            // Assert
+            Assert.AreEqual(1, result);
+        }
     }
 }

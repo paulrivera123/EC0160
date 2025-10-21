@@ -42,6 +42,9 @@
     <Reference Include="Castle.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.5.1.1\lib\net462\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.23.0.29, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.23.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -72,8 +75,8 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TestPlatform.ObjectModel.18.0.0\lib\net462\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.20.72.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.20.72\lib\net462\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.20.70.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.20.70\lib\net462\Moq.dll</HintPath>
     </Reference>
     <Reference Include="MSTest.TestFramework, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.4.0.1\lib\net462\MSTest.TestFramework.dll</HintPath>
@@ -111,6 +114,7 @@
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -128,6 +132,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Cliente.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -157,6 +162,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Datacliente\Datacliente.csproj">
+      <Project>{b0a9ecc0-26af-4b32-97fa-d5d64238a9f1}</Project>
+      <Name>Datacliente</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Negociocliente\Negociocliente.csproj">
       <Project>{79da4546-ef9a-4b58-8da1-c7bc5ace8d71}</Project>
       <Name>Negociocliente</Name>
@@ -166,22 +175,23 @@
     <Analyzer Include="..\packages\MSTest.Analyzers.4.0.1\analyzers\dotnet\cs\MSTest.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\MSTest.Analyzers.4.0.1\analyzers\dotnet\cs\MSTest.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets" Condition="Exists('..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Testing.Platform.2.0.1\build\netstandard2.0\Microsoft.Testing.Platform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Testing.Platform.2.0.1\build\netstandard2.0\Microsoft.Testing.Platform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Testing.Platform.2.0.1\build\netstandard2.0\Microsoft.Testing.Platform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Testing.Platform.2.0.1\build\netstandard2.0\Microsoft.Testing.Platform.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Testing.Platform.MSBuild.2.0.1\build\Microsoft.Testing.Platform.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Testing.Platform.MSBuild.2.0.1\build\Microsoft.Testing.Platform.MSBuild.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Testing.Platform.MSBuild.2.0.1\build\Microsoft.Testing.Platform.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Testing.Platform.MSBuild.2.0.1\build\Microsoft.Testing.Platform.MSBuild.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Testing.Extensions.Telemetry.2.0.1\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Testing.Extensions.Telemetry.2.0.1\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props'))" />
+    <Error Condition="!Exists('..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets'))" />
     <Error Condition="!Exists('..\packages\MSTest.TestAdapter.4.0.1\build\net462\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.4.0.1\build\net462\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('..\packages\MSTest.TestAdapter.4.0.1\build\net462\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.4.0.1\build\net462\MSTest.TestAdapter.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.Testing.Platform.2.0.1\build\netstandard2.0\Microsoft.Testing.Platform.targets" Condition="Exists('..\packages\Microsoft.Testing.Platform.2.0.1\build\netstandard2.0\Microsoft.Testing.Platform.targets')" />
   <Import Project="..\packages\Microsoft.Testing.Platform.MSBuild.2.0.1\build\Microsoft.Testing.Platform.MSBuild.targets" Condition="Exists('..\packages\Microsoft.Testing.Platform.MSBuild.2.0.1\build\Microsoft.Testing.Platform.MSBuild.targets')" />
+  <Import Project="..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets" Condition="Exists('..\packages\MSTest.TestFramework.4.0.1\build\net462\MSTest.TestFramework.targets')" />
   <Import Project="..\packages\MSTest.TestAdapter.4.0.1\build\net462\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.4.0.1\build\net462\MSTest.TestAdapter.targets')" />
 </Project>

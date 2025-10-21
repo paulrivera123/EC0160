@@ -1,108 +1,87 @@
-﻿using Datacliente;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using EC0160.Data;  // ← AGREGAR este using
 
-namespace Negociocliente
+namespace EC0160.Business
 {
-    // Clase pública para que la Capa de Presentación pueda verla
-    public class Negociocliente
+    public class NegocioCliente
     {
-        private DataCliente dataCliente; // Variable para almacenar la instancia
+        private readonly IDataCliente _dataCliente;
 
-        // --- PROPIEDADES PÚBLICAS ---
-        public string CustomerID { get; set; }
-        public string CompanyName { get; set; }
-        public string ContactName { get; set; }
-        public string ContactTitle { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string Region { get; set; }
-        public string PostalCode { get; set; }
-        public string Country { get; set; }
-        public string Phone { get; set; }
-        public string Fax { get; set; }
-
-        // --- CONSTRUCTOR 1: Para la Interfaz de Usuario (usa el objeto real) ---
-        // Este constructor es necesario para que Form1 pueda inicializar la clase.
-        public Negociocliente()
+        // Constructor para la Interfaz de Usuario
+        public NegocioCliente()
         {
-            dataCliente = new DataCliente();
+            _dataCliente = new DataCliente();
         }
 
-        // --- CONSTRUCTOR 2: Para las Pruebas Unitarias (Inyección de Dependencia) ---
-        // Este constructor es necesario para que las pruebas puedan inyectar un simulador (Mock).
-        public Negociocliente(DataCliente dc)
+        // Constructor para Pruebas Unitarias (Inyección de Dependencias)
+        public NegocioCliente(IDataCliente dataCliente)
         {
-            dataCliente = dc;
+            _dataCliente = dataCliente ?? throw new ArgumentNullException(nameof(dataCliente));
         }
 
-        // --- MÉTODOS DE NEGOCIO (CRUD) ---
-
-        public bool insertar()
+        public List<Cliente> ObtenerClientes()
         {
-            var customer = new Customer
+            try
             {
-                CustomerID = this.CustomerID,
-                CompanyName = this.CompanyName,
-                ContactName = this.ContactName,
-                ContactTitle = this.ContactTitle,
-                Address = this.Address,
-                City = this.City,
-                Region = this.Region,
-                PostalCode = this.PostalCode,
-                Country = this.Country,
-                Phone = this.Phone,
-                Fax = this.Fax
-            };
+                var dataTable = _dataCliente.ObtenerClientes();
+                var clientes = new List<Cliente>();
 
-            return dataCliente.insertarCustomer(customer);
-        }
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    clientes.Add(new Cliente
+                    {
+                        Id = Convert.ToInt32(row["Id"]),
+                        Nombre = row["Nombre"].ToString(),
+                        Apellido = row["Apellido"].ToString(),
+                        Email = row["Email"].ToString(),
+                        Telefono = row["Telefono"].ToString(),
+                        Direccion = row["Direccion"].ToString()
+                    });
+                }
 
-        public bool actualizar()
-        {
-            var customer = new Customer
-            {
-                CustomerID = this.CustomerID,
-                CompanyName = this.CompanyName,
-                ContactName = this.ContactName,
-                ContactTitle = this.ContactTitle,
-                Address = this.Address,
-                City = this.City,
-                Region = this.Region,
-                PostalCode = this.PostalCode,
-                Country = this.Country,
-                Phone = this.Phone,
-                Fax = this.Fax
-            };
-            return dataCliente.actualizarCustomer(customer);
-        }
-
-        public bool eliminar()
-        {
-            return dataCliente.eliminarCustomer(this.CustomerID);
-        }
-
-        public bool cargar()
-        {
-            Customer customerEncontrado = dataCliente.cargarCustomer(this.CustomerID);
-
-            if (customerEncontrado != null)
-            {
-                this.CustomerID = customerEncontrado.CustomerID;
-                this.CompanyName = customerEncontrado.CompanyName;
-                this.ContactName = customerEncontrado.ContactName;
-                this.ContactTitle = customerEncontrado.ContactTitle;
-                this.Address = customerEncontrado.Address;
-                this.City = customerEncontrado.City;
-                this.Region = customerEncontrado.Region;
-                this.PostalCode = customerEncontrado.PostalCode;
-                this.Country = customerEncontrado.Country;
-                this.Phone = customerEncontrado.Phone;
-                this.Fax = customerEncontrado.Fax;
-                return true;
+                return clientes;
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception($"Error al obtener clientes: {ex.Message}", ex);
+            }
+        }
+
+        public int CrearCliente(Cliente cliente)
+        {
+            try
+            {
+                return _dataCliente.CrearCliente(cliente);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al crear cliente: {ex.Message}", ex);
+            }
+        }
+
+        public int ActualizarCliente(Cliente cliente)
+        {
+            try
+            {
+                return _dataCliente.ActualizarCliente(cliente);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al actualizar cliente: {ex.Message}", ex);
+            }
+        }
+
+        public int EliminarCliente(int id)
+        {
+            try
+            {
+                return _dataCliente.EliminarCliente(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al eliminar cliente: {ex.Message}", ex);
             }
         }
     }

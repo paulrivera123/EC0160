@@ -1,69 +1,131 @@
 ﻿using System;
-using System.Linq;
+using System.Data;
+using System.Data.SqlClient;
 
-namespace Datacliente
+namespace EC0160.Data
+{ 
+      public class Cliente
 {
-    public class DataCliente
+    public int Id { get; set; }
+    public string Nombre { get; set; }
+    public string Apellido { get; set; }
+    public string Email { get; set; }
+    public string Telefono { get; set; }
+    public string Direccion { get; set; }
+}
+
+    public interface IDataCliente
     {
-        public bool insertarCustomer(Customer customer)
+        DataTable ObtenerClientes();
+        int CrearCliente(Cliente cliente);
+        int ActualizarCliente(Cliente cliente);
+        int EliminarCliente(int id);
+    }
+
+    public class DataCliente : IDataCliente
+    {
+        private readonly string _connectionString;
+
+        public DataCliente()
         {
-            try
-            {
-                using (var contexto = new NorthwindContext())
-                {
-                    contexto.Customers.Add(customer);
-                    contexto.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception) { return false; }
+            _connectionString = "Data Source=(local);Initial Catalog=Northwind;Integrated Security=True";
         }
 
-        public bool actualizarCustomer(Customer customer)
+        public DataTable ObtenerClientes()
         {
+            var dataTable = new DataTable();
+
             try
             {
-                using (var contexto = new NorthwindContext())
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand("SELECT * FROM Customers", connection))
+                using (var adapter = new SqlDataAdapter(command))
                 {
-                    var clienteExistente = contexto.Customers.Find(customer.CustomerID);
-                    if (clienteExistente == null) return false;
-
-                    contexto.Entry(clienteExistente).CurrentValues.SetValues(customer);
-                    contexto.SaveChanges();
-                    return true;
+                    connection.Open();
+                    adapter.Fill(dataTable);
                 }
             }
-            catch (Exception) { return false; }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener clientes: {ex.Message}", ex);
+            }
+
+            return dataTable;
         }
 
-        public bool eliminarCustomer(string customerID)
+        public int CrearCliente(Cliente cliente)
         {
             try
             {
-                using (var contexto = new NorthwindContext())
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(
+                    "INSERT INTO Customers (CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone, Fax) " +
+                    "VALUES (@CustomerID, @CompanyName, @ContactName, @ContactTitle, @Address, @City, @Region, @PostalCode, @Country, @Phone, @Fax)", connection))
                 {
-                    var clienteAEliminar = contexto.Customers.Find(customerID);
-                    if (clienteAEliminar == null) return false;
+                    command.Parameters.AddWithValue("@CustomerID", cliente.Id.ToString());
+                    command.Parameters.AddWithValue("@CompanyName", cliente.Nombre);
+                    command.Parameters.AddWithValue("@ContactName", cliente.Apellido);
+                    command.Parameters.AddWithValue("@ContactTitle", DBNull.Value);
+                    command.Parameters.AddWithValue("@Address", cliente.Direccion);
+                    command.Parameters.AddWithValue("@City", DBNull.Value);
+                    command.Parameters.AddWithValue("@Region", DBNull.Value);
+                    command.Parameters.AddWithValue("@PostalCode", DBNull.Value);
+                    command.Parameters.AddWithValue("@Country", DBNull.Value);
+                    command.Parameters.AddWithValue("@Phone", cliente.Telefono);
+                    command.Parameters.AddWithValue("@Fax", DBNull.Value);
 
-                    contexto.Customers.Remove(clienteAEliminar);
-                    contexto.SaveChanges();
-                    return true;
+                    connection.Open();
+                    return command.ExecuteNonQuery();
                 }
             }
-            catch (Exception) { return false; }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al crear cliente: {ex.Message}", ex);
+            }
         }
 
-        public Customer cargarCustomer(string customerID)
+        public int ActualizarCliente(Cliente cliente)
         {
             try
             {
-                using (var contexto = new NorthwindContext())
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(
+                    "UPDATE Customers SET CompanyName = @CompanyName, ContactName = @ContactName, " +
+                    "Address = @Address, Phone = @Phone WHERE CustomerID = @CustomerID", connection))
                 {
-                    var clienteEncontrado = contexto.Customers.Find(customerID);
-                    return clienteEncontrado;
+                    command.Parameters.AddWithValue("@CustomerID", cliente.Id.ToString());
+                    command.Parameters.AddWithValue("@CompanyName", cliente.Nombre);
+                    command.Parameters.AddWithValue("@ContactName", cliente.Apellido);
+                    command.Parameters.AddWithValue("@Address", cliente.Direccion);
+                    command.Parameters.AddWithValue("@Phone", cliente.Telefono);
+
+                    connection.Open();
+                    return command.ExecuteNonQuery();
                 }
             }
-            catch (Exception) { return null; }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al actualizar cliente: {ex.Message}", ex);
+            }
+        }
+
+        public int EliminarCliente(int id)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand("DELETE FROM Customers WHERE CustomerID = @CustomerID", connection))
+                {
+                    command.Parameters.AddWithValue("@CustomerID", id.ToString());
+
+                    connection.Open();
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al eliminar cliente: {ex.Message}", ex);
+            }
         }
     }
 }
