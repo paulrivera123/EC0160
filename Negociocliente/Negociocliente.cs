@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using Datacliente;
 
 namespace Negociocliente
@@ -9,85 +7,40 @@ namespace Negociocliente
     {
         private readonly IDataCliente _dataCliente;
 
-        // Constructor para la Interfaz de Usuario
-        public NegocioCliente()
+        // Constructor que acepta IDataCliente (para pruebas)
+        public NegocioCliente (IDataCliente dataCliente)
         {
-            _dataCliente = new DataCliente();
+            _dataCliente = dataCliente;
         }
 
-        // Constructor para Pruebas Unitarias (Inyección de Dependencias)
-        public NegocioCliente(IDataCliente dataCliente)
+        // Constructor sin parámetros (para el formulario)
+        public NegocioCliente() : this(new DataCliente())
         {
-            _dataCliente = dataCliente ?? throw new ArgumentNullException(nameof(dataCliente));
         }
 
-        public List<Cliente> ObtenerClientes()
+        public DataTable ObtenerClientes()
         {
-            try
-            {
-                var dataTable = _dataCliente.ObtenerClientes();
-                var clientes = new List<Cliente>();
+            if (_dataCliente != null)
+                return _dataCliente.ObtenerClientes();
 
-                foreach (DataRow row in dataTable.Rows)
-                {
-                    clientes.Add(new Cliente
-                    {
-                        Id = Convert.ToInt32(row["Id"]),
-                        Nombre = row["Nombre"].ToString(),
-                        Apellido = row["Apellido"].ToString(),
-                        Email = row["Email"].ToString(),
-                        Telefono = row["Telefono"].ToString(),
-                        Direccion = row["Direccion"].ToString()
-                    });
-                }
-
-                return clientes;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al obtener clientes: {ex.Message}", ex);
-            }
+            // Implementación temporal
+            var dt = new DataTable();
+            dt.Columns.Add("CustomerID", typeof(string));
+            dt.Columns.Add("CompanyName", typeof(string));
+            return dt;
         }
 
-        public IDataCliente Get_dataCliente()
+        public int CrearCliente(Customer cliente)
         {
-            return _dataCliente;
-        }
-
-        public int CrearCliente(Cliente cliente, IDataCliente _dataCliente)
-        {
-            try
-            {
+            if (_dataCliente != null)
                 return _dataCliente.CrearCliente(cliente);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al crear cliente: {ex.Message}", ex);
-            }
+
+            return 1;
         }
 
-        public int ActualizarCliente(Cliente cliente)
+        public int CrearCliente(Customer cliente, IDataCliente dataCliente)
         {
-            try
-            {
-                return _dataCliente.ActualizarCliente(cliente);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al actualizar cliente: {ex.Message}", ex);
-            }
-        }
-
-        public int EliminarCliente(int id)
-        {
-            try
-            {
-                return _dataCliente.EliminarCliente(id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al eliminar cliente: {ex.Message}", ex);
-            }
+            return dataCliente.CrearCliente(cliente);
         }
     }
 }
