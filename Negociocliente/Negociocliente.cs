@@ -49,7 +49,12 @@ namespace Negociocliente
             }
         }
 
-        public int CrearCliente(Cliente cliente)
+        public IDataCliente Get_dataCliente()
+        {
+            return _dataCliente;
+        }
+
+        public int CrearCliente(Cliente cliente, IDataCliente _dataCliente)
         {
             try
             {

@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using EC0160.Business;  // Para NegocioCliente
-using EC0160.Data;      // Para IDataCliente y Cliente
 using System;
 using System.Data;
 using System.Collections.Generic;
