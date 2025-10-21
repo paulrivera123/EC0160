@@ -3,6 +3,8 @@ using Moq;
 using System;
 using System.Data;
 using System.Collections.Generic;
+using Datacliente;
+using Negociocliente;
 
 namespace Pruebasunitarias
 {
@@ -64,7 +66,7 @@ namespace Pruebasunitarias
                 .Returns(1);
 
             // Act
-            var result = _negocioCliente.CrearCliente(cliente);
+            var result = _negocioCliente.CrearCliente(cliente, _mockDataCliente.Object);
 
             // Assert
             Assert.AreEqual(1, result);
